@@ -1,6 +1,7 @@
+import 'package:auduyurucu/components/duyuru_widget.dart';
+import 'package:auduyurucu/models/duyuru_model.dart';
 import 'package:auduyurucu/providers/main_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -12,25 +13,25 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
+    context.read<MainProvider>().duyurular = [];
     context.read<MainProvider>().getDuyuru();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    List<DuyuruModel> duyurular = context.watch<MainProvider>().duyurular;
     return Scaffold(
       appBar: AppBar(
         title: const Text('ANKU Duyurucu'),
         backgroundColor: Theme.of(context).primaryColor,
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Center(
-            child: Text(
-              'Text',
-              style: TextStyle(
-                fontSize: 34.sp,
-              ),
-            ),
-          ),
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: duyurular.map((duyuru) => DuyuruWidget(duyuru: duyuru)).toList(),
+        ),
       ),
     );
   }
