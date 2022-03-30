@@ -1,10 +1,28 @@
 import 'package:auduyurucu/providers/main_provider.dart';
 import 'package:auduyurucu/screens/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  var initializationSettingsAndroid = const AndroidInitializationSettings('ankara_logo');
+  var initializationSettingsIOS = IOSInitializationSettings(
+    requestAlertPermission: true,
+    requestBadgePermission: true,
+    requestSoundPermission: true,
+    onDidReceiveLocalNotification: (int id, String? title, String? body, String? payload) async {},
+  );
+  var initializationSettings = InitializationSettings(android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings, onSelectNotification: ((payload) {
+    if (payload != null) {
+      print('payload: ' + payload);
+    }
+  }));
+
   runApp(
     MultiProvider(
       providers: [
