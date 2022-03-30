@@ -1,6 +1,8 @@
 import 'package:auduyurucu/models/duyuru_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class DuyuruWidget extends StatelessWidget {
   final DuyuruModel duyuru;
@@ -28,6 +30,7 @@ class DuyuruWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
             children: [
               Expanded(
                 child: Text(
@@ -48,6 +51,43 @@ class DuyuruWidget extends StatelessWidget {
           Text(
             duyuru.text.trim(),
             style: TextStyle(fontSize: 14.sp),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: ElevatedButton(
+                  onPressed: () async {
+                    try {
+                      // send user to link
+                      if (!await launch(duyuru.url)) {
+                        // exception
+                        Fluttertoast.showToast(
+                            msg: "Yönlendirme sırasında hata oluştu.",
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.BOTTOM,
+                            timeInSecForIosWeb: 1,
+                            backgroundColor: Theme.of(context).colorScheme.primary,
+                            textColor: Colors.white,
+                            fontSize: 12.sp);
+                      }
+                    } catch (e) {
+                      // exception
+                      Fluttertoast.showToast(
+                          msg: "Yönlendirme sırasında hata oluştu.",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          timeInSecForIosWeb: 1,
+                          backgroundColor: Theme.of(context).colorScheme.primary,
+                          textColor: Colors.white,
+                          fontSize: 12.sp);
+                    }
+                  },
+                  child: const Text('Devamını oku'),
+                ),
+              ),
+            ],
           ),
         ],
       ),
